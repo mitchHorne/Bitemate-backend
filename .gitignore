@@ -1,0 +1,10 @@
+node_modules/
+.vscode/
+.DS_Store
+
+database.sqlite
+
+# Local development
+mysql_data/
+.env
+dist/

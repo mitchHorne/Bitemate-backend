@@ -1,16 +1,29 @@
 version: "3.8"
-services:
-  postgres:
-    image: postgres:latest
-    container_name: postgres-db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: bitemate_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: main
+      MYSQL_USER: test
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # This volume is used to persist MySQL data
+  # and is mounted to the host machine.
+  # The `./mysql_data` directory should exist on the host machine.
+  # You can create it using the command:
+  # mkdir -p ./mysql_data
 volumes:
-  postgres_data:
+  mysql_data:
     driver: local
+    driver_opts:
+      type: none
+      device: ./mysql_data
+      o: bind
