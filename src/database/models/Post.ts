@@ -3,7 +3,6 @@ import {
   Column,
   CreatedAt,
   DataType,
-  ForeignKey,
   HasMany,
   Model,
   Table,
@@ -15,7 +14,6 @@ import User from "./User";
 import DownvotePost from "./Downvote";
 import FlagPost from "./FlagPost";
 import PostComment from "./PostComment";
-import LikeComment from "./LikeComment";
 import PostReport from "./PostReport";
 import SavedPost from "./SavedPost";
 import TaggedPost from "./TaggedPost";
@@ -89,6 +87,9 @@ export default class Post extends Model {
   declare instructions: string;
 
   @Column({ type: DataType.STRING })
+  declare servingSize: string;
+
+  @Column({ type: DataType.STRING })
   declare imageUrl: string;
 
   @Column({ type: DataType.UUID })
@@ -102,8 +103,6 @@ export default class Post extends Model {
   declare flags: FlagPost[];
   @HasMany(() => PostComment)
   declare comments: PostComment[];
-  @HasMany(() => LikeComment)
-  declare likeComments: LikeComment[];
   @HasMany(() => PostReport)
   declare reports: PostReport[];
   @HasMany(() => SavedPost)

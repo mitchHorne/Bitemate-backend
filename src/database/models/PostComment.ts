@@ -1,13 +1,17 @@
 import {
+  BelongsTo,
   Column,
   CreatedAt,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
   UpdatedAt,
 } from "sequelize-typescript";
 
+import CommentDownvote from "./CommentDownvote";
+import CommentUpvote from "./CommentUpvote";
 import Post from "./Post";
 import User from "./User";
 
@@ -33,7 +37,14 @@ export default class PostComment extends Model {
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID })
-  declare userId: string;
+  declare userId: User;
+  @BelongsTo(() => User)
+  declare user: User;
+
+  @HasMany(() => CommentUpvote)
+  declare likes: CommentUpvote[];
+  @HasMany(() => CommentDownvote)
+  declare dislikes: CommentDownvote[];
 
   @CreatedAt
   declare createdAt: Date;

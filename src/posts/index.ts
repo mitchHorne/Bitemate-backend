@@ -1,7 +1,11 @@
 import { uuid } from "uuidv4";
 
+import Comments from "../database/models/PostComment";
+import CommentLikes from "../database/models/CommentUpvote";
+import CommentDislikes from "../database/models/CommentDownvote";
 import DownvotePost from "../database/models/Downvote";
 import Post from "../database/models/Post";
+import Profile from "../database/models/Profile";
 import UpvotePost from "../database/models/Upvote";
 import User from "../database/models/User";
 
@@ -12,7 +16,7 @@ export const createPost = async (postData: any) => {
 
   const ext = image.mimetype.split("/")[1] === "jpeg" ? "jpg" : "png";
   const name = `${uuid()}.${ext}`;
-  const { id, url } = await uploadImage(name, image);
+  const { url } = await uploadImage(name, image);
 
   await Post.create({ ...postData.data, imageUrl: url });
 };
@@ -42,9 +46,34 @@ export const getUser = async (id: string) => {
 export const getPosts = async (page: number) => {
   const posts = await Post.findAll({
     include: [
-      { model: User, attributes: { exclude: ["password"] } },
+      {
+        model: User,
+        attributes: { exclude: ["password"] },
+        include: [{ model: Profile }],
+      },
       { model: DownvotePost, as: "dislikes" },
       { model: UpvotePost, as: "likes" },
+      {
+        model: Comments,
+        order: [["createdAt", "DESC"]],
+        as: "comments",
+        include: [
+          {
+            model: User,
+            attributes: { exclude: ["password"] },
+            as: "user",
+            include: [{ model: Profile }],
+          },
+          {
+            model: CommentLikes,
+            as: "likes",
+          },
+          {
+            model: CommentDislikes,
+            as: "dislikes",
+          },
+        ],
+      },
     ],
     limit: 10,
     offset: (page - 1) * 10,
@@ -75,9 +104,34 @@ export const likePost = async (postId: string, userId: string) => {
   const newPost = await Post.findOne({
     where: { id: postId },
     include: [
-      { model: User, attributes: { exclude: ["password"] } },
+      {
+        model: User,
+        attributes: { exclude: ["password"] },
+        include: [{ model: Profile }],
+      },
       { model: DownvotePost, as: "dislikes" },
       { model: UpvotePost, as: "likes" },
+      {
+        model: Comments,
+        order: [["createdAt", "DESC"]],
+        as: "comments",
+        include: [
+          {
+            model: User,
+            attributes: { exclude: ["password"] },
+            as: "user",
+            include: [{ model: Profile }],
+          },
+          {
+            model: CommentLikes,
+            as: "likes",
+          },
+          {
+            model: CommentDislikes,
+            as: "dislikes",
+          },
+        ],
+      },
     ],
   });
 
@@ -105,11 +159,38 @@ export const dislikePost = async (postId: string, userId: string) => {
   const newPost = await Post.findOne({
     where: { id: postId },
     include: [
-      { model: User, attributes: { exclude: ["password"] } },
+      {
+        model: User,
+        attributes: { exclude: ["password"] },
+        include: [{ model: Profile }],
+      },
       { model: DownvotePost, as: "dislikes" },
       { model: UpvotePost, as: "likes" },
+      {
+        model: Comments,
+        order: [["createdAt", "DESC"]],
+        as: "comments",
+        include: [
+          {
+            model: User,
+            attributes: { exclude: ["password"] },
+            as: "user",
+            include: [{ model: Profile }],
+          },
+          {
+            model: CommentLikes,
+            as: "likes",
+          },
+          {
+            model: CommentDislikes,
+            as: "dislikes",
+          },
+        ],
+      },
     ],
   });
 
   return newPost.toJSON();
 };
+
+export { createComment, dislikeComment, likeComment } from "./comments";

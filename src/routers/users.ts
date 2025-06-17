@@ -1,20 +1,20 @@
 import Router from "@koa/router";
 
-import { createUser, getUser, loginUser } from "../users";
+import { createUser, getUser, loginUser, updateUser } from "../users";
 
 const router = new Router();
 
-router.post("/", async (ctx) => {
-  try {
-    const user = ctx.request.body;
-    await createUser(user);
-    ctx.status = 201;
-  } catch (error: any) {
-    console.error(error.message);
-    ctx.status = 500;
-    ctx.body = error.message;
-  }
-});
+// router.post("/", async (ctx) => {
+//   try {
+//     const user = ctx.request.body;
+//     await createUser(user);
+//     ctx.status = 201;
+//   } catch (error: any) {
+//     console.error(error.message);
+//     ctx.status = 500;
+//     ctx.body = error.message;
+//   }
+// });
 
 router.get("/:id", async (ctx) => {
   const { id } = ctx.params;
@@ -51,7 +51,24 @@ router.post("/signup", async (ctx) => {
     const user = ctx.request.body;
     await createUser(user);
     ctx.status = 201;
-  } catch (error: any) {}
+  } catch (error: any) {
+    if (error.message === "Validation error") ctx.status = 400;
+    else ctx.status = 500;
+  }
+});
+
+router.patch("/:id", async (ctx) => {
+  const { id } = ctx.params;
+  try {
+    const updatedUser = await updateUser(id, ctx.state.formData);
+    if (!updatedUser) return (ctx.status = 404);
+    ctx.status = 200;
+    ctx.body = updatedUser;
+  } catch (error: any) {
+    console.error(error.message);
+    ctx.status = 400;
+    ctx.body = error.message;
+  }
 });
 
 export default router;

@@ -10,8 +10,8 @@ import { authenticate } from "../auth";
 
 const router = new Router();
 
-router.use(explorePath, ExploreRouter.routes());
+router.use(explorePath, authenticate, ExploreRouter.routes());
 router.use(postsPath, authenticate, PostsRouter.routes());
-router.use(usersPath, UserRouter.routes());
+router.use(usersPath, authenticate, UserRouter.routes());
 
 export default router;

@@ -1,10 +1,13 @@
 import { login } from "../auth";
+import { uuid } from "uuidv4";
 
 import Follows from "../database/models/Follows";
 import Profile from "../database/models/Profile";
 import User from "../database/models/User";
 
 import { SignInSchema } from "../types/auth";
+import { uploadImage } from "../image";
+import { profile } from "console";
 
 export const createUser = async (userData: any) => {
   return User.create(
@@ -42,4 +45,36 @@ export const loginUser = async (data: any) => {
 
   console.log(userData.email, userData.password);
   return await login(userData.email, userData.password);
+};
+
+export const updateUser = async (id: string, formData: any) => {
+  const { data, files } = formData;
+
+  const user = await User.findOne({
+    include: [Profile],
+    where: { id },
+  });
+
+  if (!user) return null;
+
+  if (files.profilePhoto) {
+    const image = files.profilePhoto[0];
+
+    const ext = image.mimetype.split("/")[1] === "jpeg" ? "jpg" : "png";
+    const name = `${uuid()}.${ext}`;
+    const { url } = await uploadImage(name, image);
+    user.profile.update({ profilePhoto: url });
+  }
+
+  user.update({ name: data.name });
+  user.profile.update({
+    bio: data.bio,
+    country: data.country,
+    username: data.username,
+  });
+
+  // await user.profile.update({ ...data, profilePhoto: url });
+  await user.save();
+
+  return user.toJSON();
 };

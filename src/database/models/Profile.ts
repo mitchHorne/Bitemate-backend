@@ -39,11 +39,8 @@ export default class Profile extends Model {
   @Column({ type: DataType.BOOLEAN })
   declare isEmailVerified: boolean;
 
-  @Column({ type: DataType.UUID })
+  @Column({ type: DataType.STRING })
   declare profilePhoto: string;
-
-  @Column({ type: DataType.UUID })
-  declare subscriptionPagePhoto: string;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID })

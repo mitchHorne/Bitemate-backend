@@ -11,14 +11,13 @@ import {
 
 import PostComment from "./PostComment";
 import User from "./User";
-import Post from "./Post";
 
 @Table({
-  tableName: "like_comment",
-  modelName: "LikeComment",
+  tableName: "comment_upvote",
+  modelName: "CommentUpvote",
   timestamps: true,
 })
-export default class LikeComment extends Model {
+export default class CommentUpvote extends Model {
   @Column({
     primaryKey: true,
     type: DataType.UUID,
@@ -29,12 +28,6 @@ export default class LikeComment extends Model {
   @ForeignKey(() => PostComment)
   @Column({ type: DataType.UUID })
   declare postCommentId: string;
-  @BelongsTo(() => PostComment)
-  declare postComment: PostComment;
-
-  @ForeignKey(() => Post)
-  @Column({ type: DataType.UUID })
-  declare postId: string;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID })

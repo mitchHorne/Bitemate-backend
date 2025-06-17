@@ -17,10 +17,11 @@ import FollowRequest from "./FollowRequest";
 import Follows from "./Follows";
 
 import Post from "./Post";
+import CommentDownvote from "./CommentDownvote";
+import CommentUpvote from "./CommentUpvote";
 import DownvotePost from "./Downvote";
 import FlagPost from "./FlagPost";
 import PostComment from "./PostComment";
-import LikeComment from "./LikeComment";
 import PostReport from "./PostReport";
 import SavedPost from "./SavedPost";
 import TaggedPost from "./TaggedPost";
@@ -109,8 +110,10 @@ export default class User extends Model {
   declare flags: FlagPost[];
   @HasMany(() => PostComment)
   declare comments: PostComment[];
-  @HasMany(() => LikeComment)
-  declare likes: LikeComment[];
+  @HasMany(() => CommentDownvote)
+  declare likes: CommentDownvote[];
+  @HasMany(() => CommentUpvote)
+  declare dislikes: CommentUpvote[];
   @HasMany(() => PostReport)
   declare reports: PostReport[];
   @HasMany(() => TaggedPost)

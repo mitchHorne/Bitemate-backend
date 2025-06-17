@@ -9,7 +9,7 @@ import bodyParser from "koa-bodyparser";
 
 import router from "./routers";
 
-import { formatPostData } from "./utils/format";
+import { formatPostData, formatUpdateProfileData } from "./utils/format";
 
 // Initialize the database
 import "./database";
@@ -23,7 +23,17 @@ sourceMap.install({ handleUncaughtExceptions: true });
 const app = new Koa();
 app.use(logger());
 app.use(async (ctx, next) => {
-  if (ctx.url === "/api/v1/posts/" && ctx.method.toLowerCase() === "post") {
+  const createPost = { url: "/api/v1/posts/", method: "post" };
+  const updateProfile = { url: "/api/v1/users/", method: "patch" };
+
+  const isCreatePost =
+    ctx.url === createPost.url &&
+    ctx.method.toLowerCase() === createPost.method;
+  const isUpdateProfile =
+    ctx.url.includes(updateProfile.url) &&
+    ctx.method.toLowerCase() === updateProfile.method;
+
+  if (isCreatePost) {
     const form = formidable({});
 
     // not very elegant, but that's for now if you don't want to use `koa-better-body`
@@ -47,6 +57,30 @@ app.use(async (ctx, next) => {
       console.error("Error parsing form data:");
       ctx.status = 400;
       ctx.body = JSON.stringify({ error: "Invalid form data" });
+    }
+
+    return await next();
+  } else if (isUpdateProfile) {
+    const form = formidable({});
+
+    const success = await new Promise((resolve, reject) => {
+      form.parse(ctx.req, (err, fields, files) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        const profileData = formatUpdateProfileData(fields);
+        if (!profileData) return resolve(false);
+
+        const formData = { data: profileData, files: files };
+        ctx.state.formData = formData;
+        resolve(true);
+      });
+    });
+    if (!success) {
+      console.error("Error parsing form data:");
+      ctx.status = 400;
     }
 
     return await next();

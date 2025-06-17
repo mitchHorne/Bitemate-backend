@@ -10,6 +10,11 @@ import { tokenSchema, Token } from "../types/auth";
 const { JWT_SECRET } = process.env;
 
 export async function authenticate(ctx: Context, next: Next) {
+  const allowedPaths = ["/api/v1/users/login/", "/api/v1/users/signup/"];
+  if (allowedPaths.includes(ctx.path)) {
+    return await next();
+  }
+
   const secret = String(JWT_SECRET);
   const token = ctx.headers["authorization"]?.split(" ")[1];
 
