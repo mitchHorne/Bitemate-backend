@@ -1,5 +1,5 @@
 import { login } from "../auth";
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from "uuid";
 
 import Follows from "../database/models/Follows";
 import Profile from "../database/models/Profile";
@@ -7,7 +7,6 @@ import User from "../database/models/User";
 
 import { SignInSchema } from "../types/auth";
 import { uploadImage } from "../image";
-import { profile } from "console";
 
 export const createUser = async (userData: any) => {
   return User.create(
@@ -61,7 +60,7 @@ export const updateUser = async (id: string, formData: any) => {
     const image = files.profilePhoto[0];
 
     const ext = image.mimetype.split("/")[1] === "jpeg" ? "jpg" : "png";
-    const name = `${uuid()}.${ext}`;
+    const name = `${uuidv4()}.${ext}`;
     const { url } = await uploadImage(name, image);
     user.profile.update({ profilePhoto: url });
   }

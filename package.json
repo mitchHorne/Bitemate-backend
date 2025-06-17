@@ -12,6 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.830.0",
     "@koa/multer": "^3.0.2",
     "@koa/router": "^13.1.0",
     "@types/node": "^22.13.5",
@@ -22,6 +23,7 @@
     "dotenv": "^16.4.7",
     "dotenv-cli": "^8.0.0",
     "formidable": "^3.5.4",
+    "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
     "koa": "^2.15.3",
     "koa-bodyparser": "^4.4.1",
@@ -30,12 +32,13 @@
     "koa-multer": "^1.0.2",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.14.0",
+    "npm": "^11.4.2",
     "pify": "^6.1.0",
     "reflect-metadata": "^0.2.2",
     "sequelize": "^6.37.6",
     "sequelize-typescript": "^2.1.6",
     "tmp": "^0.2.3",
-    "uuidv4": "^6.2.13",
+    "uuid": "^11.1.0",
     "xlsx": "^0.18.5",
     "zod": "^3.24.2"
   },

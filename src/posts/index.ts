@@ -1,9 +1,9 @@
-import { uuid } from "uuidv4";
-
+import { v4 as uuidv4 } from "uuid";
 import Comments from "../database/models/PostComment";
 import CommentLikes from "../database/models/CommentUpvote";
 import CommentDislikes from "../database/models/CommentDownvote";
 import DownvotePost from "../database/models/Downvote";
+import Follows from "../database/models/Follows";
 import Post from "../database/models/Post";
 import Profile from "../database/models/Profile";
 import UpvotePost from "../database/models/Upvote";
@@ -15,7 +15,7 @@ export const createPost = async (postData: any) => {
   const image = postData.files.image0[0];
 
   const ext = image.mimetype.split("/")[1] === "jpeg" ? "jpg" : "png";
-  const name = `${uuid()}.${ext}`;
+  const name = `${uuidv4()}.${ext}`;
   const { url } = await uploadImage(name, image);
 
   await Post.create({ ...postData.data, imageUrl: url });
@@ -75,8 +75,8 @@ export const getPosts = async (page: number) => {
         ],
       },
     ],
-    limit: 10,
-    offset: (page - 1) * 10,
+    limit: 100,
+    offset: (page - 1) * 100,
     order: [["createdAt", "DESC"]],
   });
 
@@ -135,6 +135,8 @@ export const likePost = async (postId: string, userId: string) => {
     ],
   });
 
+  if (!newPost) throw new Error("Post not found");
+
   return newPost.toJSON();
 };
 
@@ -189,6 +191,8 @@ export const dislikePost = async (postId: string, userId: string) => {
       },
     ],
   });
+
+  if (!newPost) throw new Error("Post not found");
 
   return newPost.toJSON();
 };

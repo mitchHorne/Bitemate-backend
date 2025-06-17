@@ -49,6 +49,8 @@ export const createComment = async (
       ],
     });
 
+    if (!newPost) throw new Error("Post not found");
+
     return newPost.toJSON();
   } catch (error: any) {
     console.error("Error creating comment:", error.message);
@@ -113,6 +115,8 @@ export const likeComment = async (
         },
       ],
     });
+
+    if (!newPost) throw new Error("Post not found");
 
     return newPost.toJSON();
   } catch (error: any) {
@@ -181,6 +185,8 @@ export const dislikeComment = async (
         },
       ],
     });
+
+    if (!newPost) throw new Error("Post not found");
 
     return newPost.toJSON();
   } catch (error: any) {

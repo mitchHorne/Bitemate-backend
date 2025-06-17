@@ -10,6 +10,12 @@ import {
   likePost,
 } from "../posts";
 
+import {
+  LikePostBodySchema,
+  LikePostCommentBodySchema,
+  PostCommentBodySchema,
+} from "../types/posts/router";
+
 const router = new Router();
 const upload = multer();
 
@@ -26,9 +32,18 @@ router.post("/", upload.any(), async (ctx) => {
 
 router.post("/like-post", async (ctx) => {
   try {
-    const postId = ctx.request.body.post;
+    const { success, data: body } = LikePostBodySchema.safeParse(
+      ctx.request.body
+    );
+
+    if (!success) {
+      ctx.status = 400;
+      ctx.body = "Invalid post ID";
+      return;
+    }
+
     const userId = ctx.state.user.id;
-    const res = await likePost(postId, userId);
+    const res = await likePost(body.post, userId);
     ctx.status = 200;
     ctx.body = res;
   } catch (error: any) {
@@ -39,9 +54,18 @@ router.post("/like-post", async (ctx) => {
 
 router.post("/dislike-post", async (ctx) => {
   try {
-    const postId = ctx.request.body.post;
+    const { success, data: body } = LikePostBodySchema.safeParse(
+      ctx.request.body
+    );
+
+    if (!success) {
+      ctx.status = 400;
+      ctx.body = "Invalid post ID";
+      return;
+    }
+
     const userId = ctx.state.user.id;
-    const res = await dislikePost(postId, userId);
+    const res = await dislikePost(body.post, userId);
     ctx.status = 200;
     ctx.body = res;
   } catch (error: any) {
@@ -53,7 +77,17 @@ router.post("/dislike-post", async (ctx) => {
 
 router.post("/post-comment", async (ctx) => {
   try {
-    const { post, comment } = ctx.request.body;
+    const { success, data: body } = PostCommentBodySchema.safeParse(
+      ctx.request.body
+    );
+
+    if (!success) {
+      ctx.status = 400;
+      ctx.body = "Invalid post ID and comment";
+      return;
+    }
+
+    const { post, comment } = body;
     const userId = ctx.state.user.id;
     const res = await createComment(post, userId, comment);
     console.log(res);
@@ -68,10 +102,19 @@ router.post("/post-comment", async (ctx) => {
 
 router.post("/like-comment", async (ctx) => {
   try {
-    const { comment } = ctx.request.body;
+    const { success, data: body } = LikePostCommentBodySchema.safeParse(
+      ctx.request.body
+    );
+
+    if (!success) {
+      ctx.status = 400;
+      ctx.body = "Invalid comment";
+      return;
+    }
+
+    const { comment } = body;
     const userId = ctx.state.user.id;
     const res = await likeComment(userId, comment);
-    console.log(res);
     ctx.status = 200;
     ctx.body = res;
   } catch (error: any) {
@@ -83,10 +126,19 @@ router.post("/like-comment", async (ctx) => {
 
 router.post("/dislike-comment", async (ctx) => {
   try {
-    const { comment } = ctx.request.body;
+    const { success, data: body } = LikePostCommentBodySchema.safeParse(
+      ctx.request.body
+    );
+
+    if (!success) {
+      ctx.status = 400;
+      ctx.body = "Invalid comment";
+      return;
+    }
+
+    const { comment } = body;
     const userId = ctx.state.user.id;
     const res = await dislikeComment(userId, comment);
-    console.log(res);
     ctx.status = 200;
     ctx.body = res;
   } catch (error: any) {
