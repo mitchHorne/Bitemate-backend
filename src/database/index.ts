@@ -14,10 +14,10 @@ const sequelize = new Sequelize({
 // Initialize the database
 (async () => {
   try {
-    await sequelize.query("SET FOREIGN_KEY_CHECKS = 0");
-    await sequelize.sync({ force: true });
-    await sequelize.query("SET FOREIGN_KEY_CHECKS =1");
-    // await sequelize.sync();
+    // await sequelize.query("SET FOREIGN_KEY_CHECKS = 0");
+    // await sequelize.sync({ force: true });
+    // await sequelize.query("SET FOREIGN_KEY_CHECKS =1");
+    await sequelize.sync();
   } catch (err: any) {
     console.error("Unable to connect or sync database:", err);
   }

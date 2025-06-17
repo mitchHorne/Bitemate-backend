@@ -52,6 +52,7 @@ router.post("/signup", async (ctx) => {
     await createUser(user);
     ctx.status = 201;
   } catch (error: any) {
+    console.log(error);
     if (error.message === "Validation error") ctx.status = 400;
     else ctx.status = 500;
   }
