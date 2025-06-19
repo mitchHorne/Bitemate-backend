@@ -88,6 +88,7 @@ app.use(async (ctx, next) => {
     return await next();
   }
 });
+
 app.use(bodyParser());
 app.use(router.routes());
 

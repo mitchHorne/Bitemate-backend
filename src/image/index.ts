@@ -1,10 +1,21 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import fs from "fs";
+import sharp from "sharp";
 
 import { StringSchema } from "../types";
 
 const { AWS_ACCESS_KEY, AWS_SECRET, AWS_BUCKET_NAME, AWS_BUCKET_REGION } =
   process.env;
+
+const compressImage = async (image: object, type: string) => {
+  if (type === "jpeg") {
+    return await sharp(image)
+      .resize({ width: 800 })
+      .jpeg({ mozjpeg: true })
+      .toBuffer();
+  } else {
+    return await sharp(image).resize({ width: 800 }).png().toBuffer();
+  }
+};
 
 export const uploadImage = async (name: string, image: any) => {
   const { success: regionSuccess, data: region } =
@@ -18,13 +29,16 @@ export const uploadImage = async (name: string, image: any) => {
     throw new Error("Invalid AWS credentials or region");
   }
 
+  const type = image.mimetype.split("/")[1];
+  const compressedImage = await compressImage(image.filepath, type);
+
   const s3Client = new S3Client({
     region: region,
     credentials: { accessKeyId: accessKey, secretAccessKey: secret },
   });
 
   const params = {
-    Body: fs.createReadStream(image.filepath),
+    Body: compressedImage,
     Bucket: AWS_BUCKET_NAME,
     Key: name,
   };
