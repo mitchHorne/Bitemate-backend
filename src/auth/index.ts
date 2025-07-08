@@ -32,6 +32,16 @@ export async function authenticate(ctx: Context, next: Next) {
       });
     });
 
+    const user = await Users.findAll({
+      where: { id: (decodedAuthToken as Token).id },
+    });
+
+    if (!user || !user.length) {
+      ctx.status = 401;
+      ctx.body = "Unauthorized";
+      return;
+    }
+
     ctx.state.user = decodedAuthToken;
     return await next();
   } catch (error) {

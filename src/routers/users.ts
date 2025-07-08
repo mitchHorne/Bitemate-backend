@@ -1,6 +1,13 @@
 import Router from "@koa/router";
 
-import { createUser, getUser, loginUser, updateUser } from "../users";
+import {
+  createUser,
+  getUser,
+  getOtherUser,
+  loginUser,
+  updateUser,
+} from "../users";
+import { resetRetrieveHandlers } from "source-map-support";
 
 const router = new Router();
 
@@ -23,6 +30,21 @@ router.get("/:id", async (ctx) => {
 
     if (!user) return (ctx.status = 404);
 
+    ctx.status = 200;
+    ctx.body = user;
+  } catch (error: any) {
+    console.error(error.message);
+    ctx.status = 500;
+    ctx.body = error.message;
+  }
+});
+
+router.get("/view_user_profile/:id", async (ctx) => {
+  const { id } = ctx.params;
+  try {
+    if (!id) return (ctx.status = 400);
+    const user = await getOtherUser(id);
+    if (!user) return (ctx.status = 404);
     ctx.status = 200;
     ctx.body = user;
   } catch (error: any) {

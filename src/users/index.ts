@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import Follows from "../database/models/Follows";
 import Profile from "../database/models/Profile";
+import Post from "../database/models/Post";
 import User from "../database/models/User";
 
 import { SignInSchema } from "../types/auth";
@@ -31,6 +32,16 @@ export const getUser = async (id: string) => {
         attributes: ["followingId" as "id"],
       },
     ],
+    where: { id },
+  });
+
+  return userData?.toJSON();
+};
+
+export const getOtherUser = async (id: string) => {
+  const userData = await User.findOne({
+    attributes: { exclude: ["password"] },
+    include: [Profile, { model: Post, as: "posts" }],
     where: { id },
   });
 

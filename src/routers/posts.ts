@@ -4,16 +4,19 @@ import multer from "koa-multer";
 import {
   createComment,
   createPost,
+  createRegularPost,
   dislikeComment,
   dislikePost,
   likeComment,
   likePost,
+  getSearchedPosts,
 } from "../posts";
 
 import {
   LikePostBodySchema,
   LikePostCommentBodySchema,
   PostCommentBodySchema,
+  SearchedPostsBody,
 } from "../types/posts/router";
 
 const router = new Router();
@@ -23,6 +26,41 @@ router.post("/", upload.any(), async (ctx) => {
   try {
     await createPost(ctx.state.formData);
     ctx.status = 200;
+  } catch (error: any) {
+    console.error(error.message);
+    ctx.status = 500;
+    ctx.body = error.message;
+  }
+});
+
+router.post("/regular", upload.any(), async (ctx) => {
+  try {
+    await createRegularPost(ctx.state.formData);
+    ctx.status = 200;
+  } catch (error: any) {
+    console.error(error.message);
+    ctx.status = 500;
+    ctx.body = error.message;
+  }
+});
+
+router.post("/search", async (ctx) => {
+  try {
+    console.log("Searching for posts");
+    const { body } = ctx.request;
+    const { success, data } = SearchedPostsBody.safeParse(body);
+
+    if (!success) {
+      ctx.status = 400;
+      ctx.body = "Invalid search data";
+      return;
+    }
+
+    const { page, searchText } = data;
+
+    const posts = await getSearchedPosts(page, searchText);
+    ctx.status = 200;
+    ctx.body = { posts };
   } catch (error: any) {
     console.error(error.message);
     ctx.status = 500;

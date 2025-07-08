@@ -24,11 +24,15 @@ const app = new Koa();
 app.use(logger());
 app.use(async (ctx, next) => {
   const createPost = { url: "/api/v1/posts/", method: "post" };
+  const createRegularPost = { url: "/api/v1/posts/regular", method: "post" };
   const updateProfile = { url: "/api/v1/users/", method: "patch" };
 
   const isCreatePost =
     ctx.url === createPost.url &&
     ctx.method.toLowerCase() === createPost.method;
+  const isCreateRegularPost =
+    ctx.url === createRegularPost.url &&
+    ctx.method.toLowerCase() === createRegularPost.method;
   const isUpdateProfile =
     ctx.url.includes(updateProfile.url) &&
     ctx.method.toLowerCase() === updateProfile.method;
@@ -60,6 +64,31 @@ app.use(async (ctx, next) => {
     }
 
     return await next();
+  } else if (isCreateRegularPost) {
+    const form = formidable({});
+
+    // not very elegant, but that's for now if you don't want to use `koa-better-body`
+    // or other middlewares.
+    const success = await new Promise((resolve, reject) => {
+      form.parse(ctx.req, (err, fields, files) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        const postData = formatPostData(fields);
+        if (!postData) return resolve(false);
+
+        ctx.state.formData = { data: postData, files: files };
+        resolve(true);
+      });
+    });
+
+    if (!success) {
+      console.error("Error parsing form data:");
+      ctx.status = 400;
+      ctx.body = JSON.stringify({ error: "Invalid form data" });
+    }
   } else if (isUpdateProfile) {
     const form = formidable({});
 
