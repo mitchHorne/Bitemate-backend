@@ -111,8 +111,6 @@ export const getSearchedPosts = async (
       }
     : [];
 
-  console.log(filters);
-
   const countries = filters?.countries?.length
     ? filters.countries.map((country) => country.id)
     : null;
@@ -126,7 +124,7 @@ export const getSearchedPosts = async (
   const isTraditional = filters?.isTraditional || null;
 
   const filterObjects = [
-    countries ? { countryId: { [Op.in]: countries } } : null,
+    countries ? { country: { [Op.in]: countries } } : null,
     difficulty ? { difficulty } : null,
     ingredientInclude
       ? { ingredients: { [Op.like]: `%${ingredientInclude.join("%")}%` } }
@@ -152,8 +150,6 @@ export const getSearchedPosts = async (
     ...finalFilterObject,
   };
 
-  console.log("Where Clause:");
-  console.log(whereClause);
   const posts = await Post.findAll({
     include: [
       {
