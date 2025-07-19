@@ -8,6 +8,7 @@ import Post from "../database/models/Post";
 import Profile from "../database/models/Profile";
 import UpvotePost from "../database/models/Upvote";
 import User from "../database/models/User";
+import { Filters } from "../types/posts/router";
 
 import { Op } from "sequelize";
 import { uploadImage } from "../image";
@@ -94,7 +95,65 @@ export const getPosts = async (page: number) => {
   return posts.map((post) => post.toJSON());
 };
 
-export const getSearchedPosts = async (page: number, searchText: string) => {
+export const getSearchedPosts = async (
+  page: number,
+  searchText: string,
+  filters: Filters
+) => {
+  const searchObjects = searchText
+    ? {
+        [Op.or]: [
+          { foodName: { [Op.like]: `%${searchText}%` } },
+          { foodNameNative: { [Op.like]: `%${searchText}%` } },
+          { description: { [Op.like]: `%${searchText}%` } },
+          { ingredients: { [Op.like]: `%${searchText}%` } },
+        ],
+      }
+    : [];
+
+  console.log(filters);
+
+  const countries = filters?.countries?.length
+    ? filters.countries.map((country) => country.id)
+    : null;
+  const difficulty = filters?.difficulty || null;
+  const ingredientInclude = filters?.ingredientInclude?.length
+    ? filters?.ingredientInclude
+    : null;
+  const ingredientExclude = filters?.ingredientExclude?.length
+    ? filters?.ingredientExclude
+    : null;
+  const isTraditional = filters?.isTraditional || null;
+
+  const filterObjects = [
+    countries ? { countryId: { [Op.in]: countries } } : null,
+    difficulty ? { difficulty } : null,
+    ingredientInclude
+      ? { ingredients: { [Op.like]: `%${ingredientInclude.join("%")}%` } }
+      : null,
+    ingredientExclude
+      ? { ingredients: { [Op.notLike]: `%${ingredientExclude.join("%")}%` } }
+      : null,
+    isTraditional !== null ? { isTraditional } : null,
+  ];
+
+  const filteredFilterObjects = filterObjects.filter(
+    (filter) => filter !== null
+  );
+
+  const finalFilterObject = filteredFilterObjects.length
+    ? {
+        [Op.and]: filteredFilterObjects,
+      }
+    : {};
+
+  const whereClause = {
+    ...searchObjects,
+    ...finalFilterObject,
+  };
+
+  console.log("Where Clause:");
+  console.log(whereClause);
   const posts = await Post.findAll({
     include: [
       {
@@ -130,12 +189,7 @@ export const getSearchedPosts = async (page: number, searchText: string) => {
     offset: (page - 1) * 100,
     order: [["createdAt", "DESC"]],
     where: {
-      [Op.or]: [
-        { foodName: { [Op.like]: `%${searchText}%` } },
-        { foodNameNative: { [Op.like]: `%${searchText}%` } },
-        { description: { [Op.like]: `%${searchText}%` } },
-        { ingredients: { [Op.like]: `%${searchText}%` } },
-      ],
+      ...whereClause,
     },
   });
 

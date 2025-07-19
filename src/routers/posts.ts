@@ -46,9 +46,8 @@ router.post("/regular", upload.any(), async (ctx) => {
 
 router.post("/search", async (ctx) => {
   try {
-    console.log("Searching for posts");
     const { body } = ctx.request;
-    const { success, data } = SearchedPostsBody.safeParse(body);
+    const { success, data, error } = SearchedPostsBody.safeParse(body);
 
     if (!success) {
       ctx.status = 400;
@@ -56,9 +55,9 @@ router.post("/search", async (ctx) => {
       return;
     }
 
-    const { page, searchText } = data;
+    const { page, searchText, filters } = data;
 
-    const posts = await getSearchedPosts(page, searchText);
+    const posts = await getSearchedPosts(page, searchText, filters);
     ctx.status = 200;
     ctx.body = { posts };
   } catch (error: any) {
