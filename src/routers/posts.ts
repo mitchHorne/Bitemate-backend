@@ -10,6 +10,7 @@ import {
   likeComment,
   likePost,
   getSearchedPosts,
+  getCountryPosts,
 } from "../posts";
 
 import {
@@ -30,6 +31,20 @@ router.post("/", upload.any(), async (ctx) => {
     console.error(error.message);
     ctx.status = 500;
     ctx.body = error.message;
+  }
+});
+
+router.get("/country/:country", async (ctx) => {
+  try {
+    const { country } = ctx.params;
+    const res = await getCountryPosts(country);
+    console.log(res);
+    ctx.status = 200;
+    ctx.body = res;
+  } catch (err: any) {
+    console.error(err.message);
+    ctx.status = 500;
+    ctx.body = err.message;
   }
 });
 

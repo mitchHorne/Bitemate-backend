@@ -59,9 +59,6 @@ export default class Post extends Model {
   @Column({ type: DataType.STRING })
   declare country: string;
 
-  @Column({ type: DataType.STRING })
-  declare filters: string;
-
   @Column({ type: DataType.INTEGER })
   declare downVote: number;
 

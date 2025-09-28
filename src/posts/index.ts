@@ -95,6 +95,46 @@ export const getPosts = async (page: number) => {
   return posts.map((post) => post.toJSON());
 };
 
+export const getCountryPosts = async (country: string) => {
+  const posts = await Post.findAll({
+    include: [
+      {
+        model: User,
+        attributes: { exclude: ["password"] },
+        include: [{ model: Profile }],
+      },
+      { model: DownvotePost, as: "dislikes" },
+      { model: UpvotePost, as: "likes" },
+      {
+        model: Comments,
+        order: [["createdAt", "DESC"]],
+        as: "comments",
+        include: [
+          {
+            model: User,
+            attributes: { exclude: ["password"] },
+            as: "user",
+            include: [{ model: Profile }],
+          },
+          {
+            model: CommentLikes,
+            as: "likes",
+          },
+          {
+            model: CommentDislikes,
+            as: "dislikes",
+          },
+        ],
+      },
+    ],
+    limit: 3,
+    order: [["createdAt", "DESC"]],
+    where: { country },
+  });
+
+  return posts.map((post) => post.toJSON());
+};
+
 export const getSearchedPosts = async (
   page: number,
   searchText: string,
