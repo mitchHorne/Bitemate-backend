@@ -77,10 +77,10 @@ export default class Post extends Model {
   @Column({ type: DataType.BOOLEAN })
   declare isRecipe: boolean;
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.TEXT("medium") })
   declare ingredients: string;
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.TEXT("medium") })
   declare instructions: string;
 
   @Column({ type: DataType.STRING })
