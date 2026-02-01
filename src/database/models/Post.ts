@@ -89,7 +89,7 @@ export default class Post extends Model {
   @Column({ type: DataType.STRING })
   declare imageUrl: string;
 
-  @Column({ type: DataType.UUID })
+  @Column({ type: DataType.STRING })
   declare videoUrl: string;
 
   @BelongsTo(() => User, "authorId")

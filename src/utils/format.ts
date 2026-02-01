@@ -24,6 +24,7 @@ export function formatPostData(postData: any) {
       suitedOccasion: postData.occasions[0],
       timeToCook: postData.time_to_cook[0],
       upVote: 0,
+      video: postData.video,
     };
   } catch (err) {
     console.log(err);

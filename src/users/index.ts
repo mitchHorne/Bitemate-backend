@@ -12,7 +12,7 @@ import { uploadImage } from "../image";
 export const createUser = async (userData: any) => {
   return User.create(
     { ...userData, profile: { username: userData.email } },
-    { include: [Profile] }
+    { include: [Profile] },
   );
 };
 
@@ -72,8 +72,8 @@ export const updateUser = async (id: string, formData: any) => {
 
     const ext = image.mimetype.split("/")[1] === "jpeg" ? "jpg" : "png";
     const name = `${uuidv4()}.${ext}`;
-    const { url } = await uploadImage(name, image);
-    user.profile.update({ profilePhoto: url });
+    await uploadImage(name, image);
+    user.profile.update({ profilePhoto: name });
   }
 
   user.update({ name: data.name });

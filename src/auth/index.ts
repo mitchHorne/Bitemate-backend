@@ -10,7 +10,6 @@ import { tokenSchema, Token } from "../types/auth";
 const { JWT_SECRET } = process.env;
 
 export async function authenticate(ctx: Context, next: Next) {
-  console.log("Authenticating");
   const allowedPaths = ["/api/v1/users/login/", "/api/v1/users/signup/"];
   if (allowedPaths.includes(ctx.path)) {
     return await next();
@@ -36,9 +35,6 @@ export async function authenticate(ctx: Context, next: Next) {
     const user = await Users.findAll({
       where: { id: (decodedAuthToken as Token).id },
     });
-
-    console.log("Authenticating");
-    console.log(user);
 
     if (!user || !user.length) {
       ctx.status = 401;
@@ -116,7 +112,7 @@ export async function authenticate(ctx: Context, next: Next) {
 
 async function login(
   email: string,
-  password: string
+  password: string,
 ): Promise<{ token: string; user: Token }> {
   const dbUser = await Users.findOne({
     where: { email },

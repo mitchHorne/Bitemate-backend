@@ -25,8 +25,9 @@ const upload = multer();
 
 router.post("/", upload.any(), async (ctx) => {
   try {
-    await createPost(ctx.state.formData);
+    const res = await createPost(ctx.state.formData);
     ctx.status = 200;
+    ctx.body = res;
   } catch (error: any) {
     console.error(error.message);
     ctx.status = 500;
@@ -85,7 +86,7 @@ router.post("/search", async (ctx) => {
 router.post("/like-post", async (ctx) => {
   try {
     const { success, data: body } = LikePostBodySchema.safeParse(
-      ctx.request.body
+      ctx.request.body,
     );
 
     if (!success) {
@@ -107,7 +108,7 @@ router.post("/like-post", async (ctx) => {
 router.post("/dislike-post", async (ctx) => {
   try {
     const { success, data: body } = LikePostBodySchema.safeParse(
-      ctx.request.body
+      ctx.request.body,
     );
 
     if (!success) {
@@ -130,7 +131,7 @@ router.post("/dislike-post", async (ctx) => {
 router.post("/post-comment", async (ctx) => {
   try {
     const { success, data: body } = PostCommentBodySchema.safeParse(
-      ctx.request.body
+      ctx.request.body,
     );
 
     if (!success) {
@@ -155,7 +156,7 @@ router.post("/post-comment", async (ctx) => {
 router.post("/like-comment", async (ctx) => {
   try {
     const { success, data: body } = LikePostCommentBodySchema.safeParse(
-      ctx.request.body
+      ctx.request.body,
     );
 
     if (!success) {
@@ -179,7 +180,7 @@ router.post("/like-comment", async (ctx) => {
 router.post("/dislike-comment", async (ctx) => {
   try {
     const { success, data: body } = LikePostCommentBodySchema.safeParse(
-      ctx.request.body
+      ctx.request.body,
     );
 
     if (!success) {

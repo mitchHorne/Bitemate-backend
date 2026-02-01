@@ -1,23 +1,15 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import sharp from "sharp";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { StringSchema } from "../types";
 
 const { AWS_ACCESS_KEY, AWS_SECRET, AWS_BUCKET_NAME, AWS_BUCKET_REGION } =
   process.env;
 
-const compressImage = async (image: object, type: string) => {
-  if (type === "jpeg") {
-    return await sharp(image)
-      .resize({ width: 800 })
-      .jpeg({ mozjpeg: true })
-      .toBuffer();
-  } else {
-    return await sharp(image).resize({ width: 800 }).png().toBuffer();
-  }
-};
-
-export const uploadImage = async (name: string, image: any) => {
+export const createPresignedUrl = async (
+  filename: string,
+  contentType: string = "video/mp4",
+) => {
   const { success: regionSuccess, data: region } =
     StringSchema.safeParse(AWS_BUCKET_REGION);
   const { success: accessKeySuccess, data: accessKey } =
@@ -25,24 +17,22 @@ export const uploadImage = async (name: string, image: any) => {
   const { success: secretSuccess, data: secret } =
     StringSchema.safeParse(AWS_SECRET);
 
-  if (!regionSuccess || !accessKeySuccess || !secretSuccess) {
+  if (!regionSuccess || !accessKeySuccess || !secretSuccess)
     throw new Error("Invalid AWS credentials or region");
-  }
-
-  const type = image.mimetype.split("/")[1];
-  const compressedImage = await compressImage(image.filepath, type);
 
   const s3Client = new S3Client({
     region: region,
     credentials: { accessKeyId: accessKey, secretAccessKey: secret },
   });
 
-  const params = {
-    Body: compressedImage,
+  const command = new PutObjectCommand({
     Bucket: AWS_BUCKET_NAME,
-    Key: name,
-  };
+    Key: filename,
+    ContentType: contentType,
+  });
 
-  const command = new PutObjectCommand(params);
-  await s3Client.send(command);
+  const signedUrl = await getSignedUrl(s3Client, command, {
+    expiresIn: 3600,
+  });
+  return signedUrl;
 };

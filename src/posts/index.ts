@@ -12,25 +12,43 @@ import { Filters } from "../types/posts/router";
 
 import { Op } from "sequelize";
 import { uploadImage } from "../image";
+import { createPresignedUrl } from "../video";
 
 export const createPost = async (postData: any) => {
   const image = postData.files.image0[0];
+  const video = postData.files.videos0[0];
 
-  const ext = image.mimetype.split("/")[1] === "jpeg" ? "jpg" : "png";
-  const name = `${uuidv4()}.${ext}`;
-  const { url } = await uploadImage(name, image);
+  const imageExt = image.mimetype.split("/")[1] === "jpeg" ? "jpg" : "png";
+  const imageName = `${uuidv4()}.${imageExt}`;
+  await uploadImage(imageName, image);
 
-  await Post.create({ ...postData.data, imageUrl: url });
+  let presignedUrl = null;
+  const videoName = `${uuidv4()}.${video.mimetype.split("/")[1]}`;
+  if (video) presignedUrl = await createPresignedUrl(videoName, video.mimetype);
+
+  await Post.create({
+    ...postData.data,
+    imageUrl: imageName,
+    videoUrl: videoName,
+  });
+
+  console.log("Presigned URL:", presignedUrl);
+  return { presignedUrl, videoType: video.mimetype };
 };
 
 export const createRegularPost = async (postData: any) => {
   const image = postData.files.image0[0];
+  const video = postData.files.video0[0];
 
-  const ext = image.mimetype.split("/")[1] === "jpeg" ? "jpg" : "png";
-  const name = `${uuidv4()}.${ext}`;
-  const { url } = await uploadImage(name, image);
+  const imageExt = image.mimetype.split("/")[1] === "jpeg" ? "jpg" : "png";
+  const imageName = `${uuidv4()}.${imageExt}`;
+  await uploadImage(imageName, image);
 
-  await Post.create({ ...postData.data, imageUrl: url });
+  const videoExt = video.mimetype.split("/")[1] === "mp4" ? "mp4" : "webm";
+  const videoName = `${uuidv4()}.${videoExt}`;
+  // const { url: videoUrl } = await uploadVideo(videoName, video);
+
+  await Post.create({ ...postData.data, imageUrl: imageName, videoUrl });
 };
 
 export const getUser = async (id: string) => {
@@ -138,7 +156,7 @@ export const getCountryPosts = async (country: string) => {
 export const getSearchedPosts = async (
   page: number,
   searchText: string,
-  filters: Filters
+  filters: Filters,
 ) => {
   const searchObjects = searchText
     ? {
@@ -176,7 +194,7 @@ export const getSearchedPosts = async (
   ];
 
   const filteredFilterObjects = filterObjects.filter(
-    (filter) => filter !== null
+    (filter) => filter !== null,
   );
 
   const finalFilterObject = filteredFilterObjects.length
