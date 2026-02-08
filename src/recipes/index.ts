@@ -1,0 +1,1 @@
+export { extractRecipeFromUrl } from "./extractRecipe";
