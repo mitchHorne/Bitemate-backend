@@ -77,7 +77,7 @@ Extract recipe information from the following text and return it as a JSON objec
         - measurement (number as string, required): Quantity of the ingredient (e.g., "2", "1/2", "3", "" if no number) without unit type. Default to "?"
         - units (string, required): The unit of measurement (e.g., "g", "tbsp", "ml", "cups", "whole" if not specified). Default to "?" if no unit or a sentence is provided
 - instructions (array of objects, required): Step-by-step cooking instructions
-    - description (string, required): Description of the step
+    - instruction (string, required): Description of the step
     - time (string, optional): Time required for the step
 - difficulty (string, optional): Difficulty level (e.g., easy, medium, hard)
 - suitedOccasion (string, optional): Suitable occasions for the recipe (e.g., "weeknight dinner", "holiday meal")

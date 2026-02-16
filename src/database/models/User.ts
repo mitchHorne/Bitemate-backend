@@ -10,9 +10,6 @@ import {
   HasOne,
 } from "sequelize-typescript";
 
-import ChatChannel from "./ChatChannel";
-import UserChatChannel from "./UserChatChannels";
-
 import FollowRequest from "./FollowRequest";
 import Follows from "./Follows";
 
@@ -100,9 +97,6 @@ export default class User extends Model {
 
   @HasMany(() => Post, "authorId")
   declare posts: Post[];
-
-  @BelongsToMany(() => ChatChannel, () => UserChatChannel)
-  declare chatChannels: ChatChannel[];
 
   @HasMany(() => DownvotePost)
   declare downVotes: DownvotePost[];
