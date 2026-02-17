@@ -39,7 +39,7 @@ export default class SavedPost extends Model {
   declare userId: string;
 
   @CreatedAt
-  declare craeted_at: Date;
+  declare created_at: Date;
 
   @UpdatedAt
   declare updated_at: Date;

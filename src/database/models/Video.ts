@@ -24,7 +24,7 @@ export default class Video extends Model {
   declare url: string;
 
   @CreatedAt
-  declare craeted_at: Date;
+  declare created_at: Date;
 
   @UpdatedAt
   declare updated_at: Date;

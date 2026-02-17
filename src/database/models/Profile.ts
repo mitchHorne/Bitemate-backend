@@ -47,7 +47,7 @@ export default class Profile extends Model {
   declare userId: String;
 
   @CreatedAt
-  declare craeted_at: Date;
+  declare created_at: Date;
 
   @UpdatedAt
   declare updated_at: Date;
