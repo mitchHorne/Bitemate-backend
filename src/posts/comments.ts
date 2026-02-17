@@ -10,7 +10,7 @@ import User from "../database/models/User";
 export const createComment = async (
   postId: string,
   userId: string,
-  comment: string
+  comment: string,
 ): Promise<Comments> => {
   try {
     await Comments.create({ postId, userId, comment });
@@ -28,7 +28,7 @@ export const createComment = async (
         {
           model: Comments,
           as: "comments",
-          order: [["createdAt", "DESC"]],
+          order: [["created_at", "DESC"]],
           include: [
             {
               model: User,
@@ -60,7 +60,7 @@ export const createComment = async (
 
 export const likeComment = async (
   userId: string,
-  commentId: string
+  commentId: string,
 ): Promise<Comments> => {
   try {
     const comment = await Comments.findOne({
@@ -95,7 +95,7 @@ export const likeComment = async (
         {
           model: Comments,
           as: "comments",
-          order: [["createdAt", "DESC"]],
+          order: [["created_at", "DESC"]],
           include: [
             {
               model: User,
@@ -127,7 +127,7 @@ export const likeComment = async (
 
 export const dislikeComment = async (
   userId: string,
-  commentId: string
+  commentId: string,
 ): Promise<Comments> => {
   try {
     const comment = await Comments.findOne({
@@ -165,7 +165,7 @@ export const dislikeComment = async (
         {
           model: Comments,
           as: "comments",
-          order: [["createdAt", "DESC"]],
+          order: [["created_at", "DESC"]],
           include: [
             {
               model: User,

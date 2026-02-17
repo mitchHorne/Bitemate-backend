@@ -85,7 +85,7 @@ export const getPosts = async (page: number) => {
       { model: UpvotePost, as: "likes" },
       {
         model: Comments,
-        order: [["createdAt", "DESC"]],
+        order: [["created_at", "DESC"]],
         as: "comments",
         include: [
           {
@@ -107,7 +107,7 @@ export const getPosts = async (page: number) => {
     ],
     limit: 100,
     offset: (page - 1) * 100,
-    order: [["createdAt", "DESC"]],
+    order: [["created_at", "DESC"]],
   });
 
   return posts.map((post) => post.toJSON());
@@ -125,7 +125,7 @@ export const getCountryPosts = async (country: string) => {
       { model: UpvotePost, as: "likes" },
       {
         model: Comments,
-        order: [["createdAt", "DESC"]],
+        order: [["created_at", "DESC"]],
         as: "comments",
         include: [
           {
@@ -146,7 +146,7 @@ export const getCountryPosts = async (country: string) => {
       },
     ],
     limit: 3,
-    order: [["createdAt", "DESC"]],
+    order: [["created_at", "DESC"]],
     where: { country },
   });
 
@@ -219,7 +219,7 @@ export const getSearchedPosts = async (
       { model: UpvotePost, as: "likes" },
       {
         model: Comments,
-        order: [["createdAt", "DESC"]],
+        order: [["created_at", "DESC"]],
         as: "comments",
         include: [
           {
@@ -241,7 +241,7 @@ export const getSearchedPosts = async (
     ],
     limit: 100,
     offset: (page - 1) * 100,
-    order: [["createdAt", "DESC"]],
+    order: [["created_at", "DESC"]],
     where: {
       ...whereClause,
     },
@@ -280,7 +280,7 @@ export const likePost = async (postId: string, userId: string) => {
       { model: UpvotePost, as: "likes" },
       {
         model: Comments,
-        order: [["createdAt", "DESC"]],
+        order: [["created_at", "DESC"]],
         as: "comments",
         include: [
           {
@@ -337,7 +337,7 @@ export const dislikePost = async (postId: string, userId: string) => {
       { model: UpvotePost, as: "likes" },
       {
         model: Comments,
-        order: [["createdAt", "DESC"]],
+        order: [["created_at", "DESC"]],
         as: "comments",
         include: [
           {

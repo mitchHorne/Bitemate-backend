@@ -34,8 +34,8 @@ export default class CommentUpvote extends Model {
   declare userId: string;
 
   @CreatedAt
-  declare createdAt: Date;
+  declare created_at: Date;
 
   @UpdatedAt
-  declare updatedAt: Date;
+  declare updated_at: Date;
 }

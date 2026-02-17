@@ -36,8 +36,8 @@ export default class TaggedPost extends Model {
   declare userId: string;
 
   @CreatedAt
-  declare createdAt: Date;
+  declare craeted_at: Date;
 
   @UpdatedAt
-  declare updatedAt: Date;
+  declare updated_at: Date;
 }

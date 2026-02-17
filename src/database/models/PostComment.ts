@@ -47,8 +47,8 @@ export default class PostComment extends Model {
   declare dislikes: CommentDownvote[];
 
   @CreatedAt
-  declare createdAt: Date;
+  declare craeted_at: Date;
 
   @UpdatedAt
-  declare updatedAt: Date;
+  declare updated_at: Date;
 }

@@ -110,8 +110,8 @@ export default class Post extends Model {
   declare likes: UpvotePost[];
 
   @CreatedAt
-  declare createdAt: Date;
+  declare craeted_at: Date;
 
   @UpdatedAt
-  declare updatedAt: Date;
+  declare updated_at: Date;
 }

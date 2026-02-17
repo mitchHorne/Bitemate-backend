@@ -24,8 +24,8 @@ export default class UserPostWishList extends Model {
   declare text: string;
 
   @CreatedAt
-  declare createdAt: Date;
+  declare craeted_at: Date;
 
   @UpdatedAt
-  declare updatedAt: Date;
+  declare updated_at: Date;
 }

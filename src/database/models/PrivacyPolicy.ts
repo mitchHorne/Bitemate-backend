@@ -34,8 +34,8 @@ export default class PrivacyPolicy extends Model {
   declare authorId: string;
 
   @CreatedAt
-  declare createdAt: Date;
+  declare craeted_at: Date;
 
   @UpdatedAt
-  declare updatedAt: Date;
+  declare updated_at: Date;
 }

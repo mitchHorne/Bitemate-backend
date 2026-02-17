@@ -20,7 +20,7 @@ export const PermissionSchema = z.object({
 
 export const PermissionsSchema = z.record(
   z.enum(permissions),
-  PermissionSchema
+  PermissionSchema,
 );
 
 export const ResetPasswordSchema = z.object({
@@ -49,15 +49,15 @@ export const UserSchema = z.object({
   allowedModules: z.array(z.enum(allowedModules)),
   permissions: PermissionsSchema,
   resetPassword: z.boolean(),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  created_at: z.date().optional(),
+  updated_at: z.date().optional(),
   deletedAt: z.date().optional(),
 });
 
 export const UserCreateBodySchema = UserSchema.omit({
   id: true,
-  createdAt: true,
-  updatedAt: true,
+  created_at: true,
+  updated_at: true,
   deletedAt: true,
   resetPassword: true,
 });
@@ -65,8 +65,8 @@ export const UserCreateBodySchema = UserSchema.omit({
 export const UserUpdateBodySchema = UserSchema.omit({
   id: true,
   password: true,
-  createdAt: true,
-  updatedAt: true,
+  created_at: true,
+  updated_at: true,
   deletedAt: true,
   resetPassword: true,
 });

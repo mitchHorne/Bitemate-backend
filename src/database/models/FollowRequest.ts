@@ -32,8 +32,8 @@ export default class FollowRequest extends Model {
   declare receiverId: string;
 
   @CreatedAt
-  declare createdAt: Date;
+  declare craeted_at: Date;
 
   @UpdatedAt
-  declare updatedAt: Date;
+  declare updated_at: Date;
 }

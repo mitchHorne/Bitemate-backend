@@ -8,8 +8,8 @@ export const AuthUserSchema = UserSchema.omit({
   email: true,
   password: true,
   resetPassword: true,
-  createdAt: true,
-  updatedAt: true,
+  created_at: true,
+  updated_at: true,
   deletedAt: true,
 });
 

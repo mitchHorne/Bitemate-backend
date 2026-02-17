@@ -1,5 +1,4 @@
 import {
-  BelongsTo,
   Column,
   CreatedAt,
   DataType,
@@ -34,8 +33,8 @@ export default class CommentDownvote extends Model {
   declare userId: string;
 
   @CreatedAt
-  declare createdAt: Date;
+  declare created_at: Date;
 
   @UpdatedAt
-  declare updatedAt: Date;
+  declare updated_at: Date;
 }
