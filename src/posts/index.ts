@@ -48,7 +48,7 @@ export const createRegularPost = async (postData: any) => {
   const videoName = `${uuidv4()}.${videoExt}`;
   // const { url: videoUrl } = await uploadVideo(videoName, video);
 
-  await Post.create({ ...postData.data, imageUrl: imageName, videoUrl });
+  await Post.create({ ...postData.data, imageUrl: imageName });
 };
 
 export const getUser = async (id: string) => {

@@ -5,14 +5,15 @@
   "license": "ISC",
   "author": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "dotenv -- nodemon --exec \"node -r esbuild-register ./src/index.ts\" -e .ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate:latest": "knex migrate:latest --knexfile knexfile.ts",
-    "migrate:rollback": "knex migrate:rollback --knexfile knexfile.ts",
-    "migrate:make": "knex migrate:make --knexfile knexfile.ts"
+    "migrate:latest": "tsx ./node_modules/.bin/knex migrate:latest --knexfile knexfile.ts",
+    "migrate:rollback": "tsx ./node_modules/.bin/knex migrate:rollback --knexfile knexfile.ts",
+    "migrate:make": "tsx ./node_modules/.bin/knex migrate:make --knexfile knexfile.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.830.0",
@@ -72,6 +73,7 @@
     "esbuild-register": "^3.4.2",
     "nodemon": "^3.1.10",
     "source-map-support": "^0.5.21",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.3"
   }
 }
