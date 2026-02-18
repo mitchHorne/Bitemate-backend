@@ -11,28 +11,31 @@ import User from "../database/models/User";
 import { Filters } from "../types/posts/router";
 
 import { Op } from "sequelize";
-import { uploadImage } from "../image";
+import { storeImage } from "../utils/image";
 import { createPresignedUrl } from "../video";
 
 export const createPost = async (postData: any) => {
   const image = postData.files.image0[0];
   const video = postData.files.videos0[0];
 
-  const imageExt = image.mimetype.split("/")[1] === "jpeg" ? "jpg" : "png";
-  const imageName = `${uuidv4()}.${imageExt}`;
-  await uploadImage(imageName, image);
+  const imageUrl = await storeImage(image.filepath, postData.data.authorId);
 
   let presignedUrl = null;
-  const videoName = `${uuidv4()}.${video.mimetype.split("/")[1]}`;
-  if (video) presignedUrl = await createPresignedUrl(videoName, video.mimetype);
+  let videoName = null;
+  if (video) {
+    console.log("Entering video upload");
+    videoName = `videos/${postData.data.authorId}/${uuidv4()}.${video.mimetype.split("/")[1]}`;
+    presignedUrl = await createPresignedUrl(videoName, video.mimetype);
+  }
 
+  console.log("imageUrl, presignedUrl, videoName");
+  console.log(imageUrl, presignedUrl, videoName);
   await Post.create({
     ...postData.data,
-    imageUrl: imageName,
+    imageUrl,
     videoUrl: videoName,
   });
 
-  console.log("Presigned URL:", presignedUrl);
   return { presignedUrl, videoType: video.mimetype };
 };
 
@@ -40,15 +43,13 @@ export const createRegularPost = async (postData: any) => {
   const image = postData.files.image0[0];
   const video = postData.files.video0[0];
 
-  const imageExt = image.mimetype.split("/")[1] === "jpeg" ? "jpg" : "png";
-  const imageName = `${uuidv4()}.${imageExt}`;
-  await uploadImage(imageName, image);
+  const imageUrl = await storeImage(image, postData.data.userId);
 
   const videoExt = video.mimetype.split("/")[1] === "mp4" ? "mp4" : "webm";
   const videoName = `${uuidv4()}.${videoExt}`;
   // const { url: videoUrl } = await uploadVideo(videoName, video);
 
-  await Post.create({ ...postData.data, imageUrl: imageName });
+  await Post.create({ ...postData.data, imageUrl });
 };
 
 export const getUser = async (id: string) => {

@@ -1,5 +1,4 @@
 import { login } from "../auth";
-import { v4 as uuidv4 } from "uuid";
 
 import Follows from "../database/models/Follows";
 import Profile from "../database/models/Profile";
@@ -7,7 +6,8 @@ import Post from "../database/models/Post";
 import User from "../database/models/User";
 
 import { SignInSchema } from "../types/auth";
-import { uploadImage } from "../image";
+
+import { storeImage } from "../utils/image";
 
 export const createUser = async (userData: any) => {
   return User.create(
@@ -69,11 +69,11 @@ export const updateUser = async (id: string, formData: any) => {
 
   if (files.profilePhoto) {
     const image = files.profilePhoto[0];
+    console.log(image);
+    const url = await storeImage(image.filepath, user.id);
 
-    const ext = image.mimetype.split("/")[1] === "jpeg" ? "jpg" : "png";
-    const name = `${uuidv4()}.${ext}`;
-    await uploadImage(name, image);
-    user.profile.update({ profilePhoto: name });
+    console.log(url);
+    user.profile.update({ profilePhoto: url });
   }
 
   user.update({ name: data.name });

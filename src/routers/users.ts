@@ -7,21 +7,8 @@ import {
   loginUser,
   updateUser,
 } from "../users";
-import { resetRetrieveHandlers } from "source-map-support";
 
 const router = new Router();
-
-// router.post("/", async (ctx) => {
-//   try {
-//     const user = ctx.request.body;
-//     await createUser(user);
-//     ctx.status = 201;
-//   } catch (error: any) {
-//     console.error(error.message);
-//     ctx.status = 500;
-//     ctx.body = error.message;
-//   }
-// });
 
 router.get("/:id", async (ctx) => {
   const { id } = ctx.params;

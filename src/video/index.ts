@@ -20,6 +20,7 @@ export const createPresignedUrl = async (
   if (!regionSuccess || !accessKeySuccess || !secretSuccess)
     throw new Error("Invalid AWS credentials or region");
 
+  console.log("making things");
   const s3Client = new S3Client({
     region: region,
     credentials: { accessKeyId: accessKey, secretAccessKey: secret },
@@ -34,5 +35,6 @@ export const createPresignedUrl = async (
   const signedUrl = await getSignedUrl(s3Client, command, {
     expiresIn: 3600,
   });
+  console.log("Generated presigned URL:", signedUrl);
   return signedUrl;
 };
