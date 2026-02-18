@@ -28,15 +28,13 @@ export const createPost = async (postData: any) => {
     presignedUrl = await createPresignedUrl(videoName, video.mimetype);
   }
 
-  console.log("imageUrl, presignedUrl, videoName");
-  console.log(imageUrl, presignedUrl, videoName);
   await Post.create({
     ...postData.data,
     imageUrl,
     videoUrl: videoName,
   });
 
-  return { presignedUrl, videoType: video.mimetype };
+  return { presignedUrl, videoType: video?.mimetype };
 };
 
 export const createRegularPost = async (postData: any) => {
