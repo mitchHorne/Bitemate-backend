@@ -16,7 +16,6 @@ export async function storeImage(image: any, userId: string) {
 
   await uploadImage(name, compressedImage);
 
-  console.log("Image stored with name:", name);
   return name;
 }
 

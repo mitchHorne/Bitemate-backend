@@ -15,8 +15,8 @@ import { storeImage } from "../utils/image";
 import { createPresignedUrl } from "../video";
 
 export const createPost = async (postData: any) => {
-  const image = postData.files.image0[0];
-  const video = postData.files.videos0[0];
+  const image = postData.files?.image0?.[0];
+  const video = postData.files?.videos0?.[0];
 
   const imageUrl = await storeImage(image.filepath, postData.data.authorId);
 
